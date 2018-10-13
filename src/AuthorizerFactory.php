@@ -31,7 +31,7 @@ class AuthorizerFactory implements AuthorizerFactoryInterface {
 	/**
 	 * @inheritDoc
 	 */
-	public function create(string $authorizerType): AuthorizerInterface {
+	public function create(string $authorizerType, ContainerInterface $container): AuthorizerInterface {
 		if (!array_key_exists($authorizerType, $this->authorizers)) {
 			throw new UnknownAuthorizerException(
 				sprintf(
