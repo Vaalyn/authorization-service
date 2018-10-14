@@ -20,10 +20,6 @@ class AdminAuthorizer implements AuthorizerInterface {
 	 * @inheritDoc
 	 */
 	public function isAuthorized(?AuthorizationUserInterface $user, ?Request $request): bool {
-		if ($user->is_admin) {
-			return true;
-		}
-
-		return false;
+		return $user->getIsAdmin();
 	}
 }
