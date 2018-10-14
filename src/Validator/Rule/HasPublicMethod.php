@@ -24,7 +24,7 @@ class HasPublicMethod extends AbstractRelated {
 	 * @return mixed
 	 */
     public function getReferenceValue($input) {
-        return $input->{$this->reference};
+        return $input->{$this->reference}();
     }
 
 	/**

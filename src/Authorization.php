@@ -10,11 +10,6 @@ use Vaalyn\AuthorizationService\Transformer\AuthorizationUserTransformer;
 
 class Authorization implements AuthorizationInterface {
 	/**
-	 * @var array
-	 */
-	protected $routesWithAuthorization;
-
-	/**
 	 * @var AuthorizerFactory
 	 */
 	protected $authorizerFactory;
@@ -25,12 +20,23 @@ class Authorization implements AuthorizationInterface {
 	protected $authorizationUserTransformer;
 
 	/**
+	 * @var ContainerInterface
+	 */
+	protected $container;
+
+	/**
+	 * @var array
+	 */
+	protected $routesWithAuthorization;
+
+	/**
 	 * @param ContainerInterface $container
 	 */
 	public function __construct(ContainerInterface $container) {
-		$this->routesWithAuthorization      = $container->config['authorization']['routes'];
 		$this->authorizerFactory            = new AuthorizerFactory($container->config['authorization']['authorizers'], $container);
 		$this->authorizationUserTransformer = new AuthorizationUserTransformer();
+		$this->container                    = $container;
+		$this->routesWithAuthorization      = $container->config['authorization']['routes'];
 	}
 
 	/**
@@ -55,7 +61,7 @@ class Authorization implements AuthorizationInterface {
 		}
 
 		foreach ($this->routesWithAuthorization[$routeName] as $authorizerType) {
-			$authorizer = $this->authorizerFactory->create($authorizerType);
+			$authorizer = $this->authorizerFactory->create($authorizerType, $this->container);
 
 			if ($authorizer->isAuthorized($authorizationUser, $request)) {
 				return true;
