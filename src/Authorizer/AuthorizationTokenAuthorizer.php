@@ -43,7 +43,12 @@ class AuthorizationTokenAuthorizer implements AuthorizerInterface {
 				continue;
 			}
 
-			foreach ($authorizationToken->authorizedRoutes as $authorizedRoute) {
+			$authorizedRoutes = $this->databaseManager
+				->table('authorized_route')
+				->where('authorization_token_id', '=', $authorizationToken->authorization_token_id)
+				->get();
+
+			foreach ($authorizedRoutes as $authorizedRoute) {
 				if ($authorizedRoute->route_name === $this->getRouteNameFromRequest($request)) {
 					return true;
 				}
