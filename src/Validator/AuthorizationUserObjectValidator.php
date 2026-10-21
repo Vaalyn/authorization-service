@@ -5,18 +5,18 @@ declare(strict_types = 1);
 namespace Vaalyn\AuthorizationService\Validator;
 
 use Respect\Validation\Validator;
+use Vaalyn\AuthorizationService\Validator\Rules\HasPublicMethod;
 
 class AuthorizationUserObjectValidator implements AuthorizationUserObjectValidatorInterface {
 	/**
 	 * @inheritDoc
 	 */
 	public function validate(object $user): void {
-		Validator::with('Vaalyn\\AuthorizationService\\Validator\\Rule');
-
-		Validator::hasPublicMethod('getUserId', Validator::intType())
-			->hasPublicMethod('getUsername', Validator::stringType())
-			->hasPublicMethod('getEmail', Validator::stringType())
-			->hasPublicMethod('getIsAdmin', Validator::boolType())
-			->assert($user);
+		(new Validator(
+			new HasPublicMethod('getUserId', Validator::intType()),
+			new HasPublicMethod('getUsername', Validator::stringType()),
+			new HasPublicMethod('getEmail', Validator::stringType()),
+			new HasPublicMethod('getIsAdmin', Validator::boolType())
+		))->assert($user);
 	}
 }
